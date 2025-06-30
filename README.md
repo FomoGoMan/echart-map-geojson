@@ -2,19 +2,56 @@
 
 ## 文件简介
 
-本仓库提供了两套精心制作的全球各地区地图json文件，适用于echarts地图绘制功能。该资源包含全球地图以及中国详细地图，并进一步细分至中国各个省份，地图精度高，细节丰富，非常适合在项目中使用。
+This project provides two sets of high-quality world map JSON files, specially designed for ECharts mapping. It includes global maps, detailed China maps, and provincial-level maps with high precision, perfect for international data visualization and regional analysis. Whether for global overviews or in-depth exploration of Chinese provinces, these reliable and customizable maps will enhance your data presentations.
 
-## 内容概述
+本项目提供两套高质量世界地图JSON文件，专为ECharts地图功能优化。包含全球地图、中国详细地图及各省份细分地图，精度高，适合国际数据展示与地区分析。无论是全球视角还是中国省份深度呈现，这些经过验证、可自定义的地图文件都能提升数据可视化效果，为项目增添专业性与便捷性。
 
-- **全球地图**：包含全球各国家和地区的地图数据，适合进行国际数据展示与对比。
-- **中国详细地图**：不仅涵盖了中国境内的各个省份，还包括了直辖市和特别行政区的地图数据。
-- **省份细分地图**：每一套地图均提供了中国各个省份的详细地图，为地区性数据分析提供了便捷。
+## ​Key Features 核心特点​
 
-这两套地图文件是开发者自用的资源，经过实践检验，具有很好的实用性和稳定性。
+🌍 Global & China maps 全球及中国地图
+
+🏙 Provincial-level details 省级细分
+
+⚡ ECharts-ready JSON files 适配ECharts
+
+🛠 Customizable & stable 可定制、高稳定
 
 ## 使用说明
+echart example
+```java script
+<script>
+  // 初始化图表
+  const chart = echarts.init(document.getElementById('map-container'));
+  
+  // 加载并处理GeoJSON
+  fetch('world.json')
+    .then(response => response.json())
+    .then(geoJSON => {
+      // 数据清洗
+      geoJSON.features.forEach(feature => {
+        if (!feature.properties.name) {
+          feature.properties.name = 'Unnamed_Region';
+          // 或者使用坐标生成唯一ID
+          // feature.properties.name = `Region_${feature.geometry.coordinates[0][0][0]}`;
+        }
+      });
 
-- 将下载的json文件集成到echarts地图中，可以直接使用。
-- 用户可以根据需要，对地图样式进行自定义调整，以达到最佳的视觉效果。
-
-我们希望这些地图资源能够为您的项目带来便利，提升数据可视化的效果。
+      // 注册地图
+      echarts.registerMap('cleanedWorld', geoJSON);
+      
+      // 设置图表选项
+      chart.setOption({
+        series: [{
+          type: 'map',
+          // 和上面注册名保持一致
+          map: 'cleanedWorld',
+          data: [
+            {name: 'China', value: 4369},
+            // 其他数据...
+          ]
+        }]
+      });
+    })
+    .catch(error => console.error('Error:', error));
+</script>
+```
